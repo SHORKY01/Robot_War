@@ -1,68 +1,51 @@
-/*#include "Grid.h"
-#include <iostream>
-#include <vector>
 
-using namespace std;
-
-class Grid {
-private:
-    int width;
-    int height;
-    vector<vector<char>> grid;
-
-public:
-    Grid(int w, int h) : width(w), height(h) {
-        grid.resize(height, vector<char>(width, '.'));
-    }
-
-    void placeBot(int x, int y, char symbol) {
-        if (x >= 0 && x < width && y >= 0 && y < height) {
-            grid[y][x] = symbol;
-        }
-    }
-
-    void clearPosition(int x, int y) {
-        if (x >= 0 && x < width && y >= 0 && y < height) {
-            grid[y][x] = '.';
-        }
-    }
-
-    void display() const {
-        for (const auto& row : grid) {
-            for (const auto& cell : row) {
-                cout << cell << ' ';
-            }
-            cout << endl;
-        }
-    }
-};*/
 
 #include "Grid.h"
+#include "TBot.h"
 #include <iostream>
 
 using namespace std;
 
-Grid::Grid(int w, int h) : width(w), height(h) {
-    grid.resize(height, vector<char>(width, '.'));
-}
-
-void Grid::placeBot(int x, int y, char symbol) {
-    if (x >= 0 && x < width && y >= 0 && y < height) {
-        grid[y][x] = symbol;
-    }
-}
-
-void Grid::clearPosition(int x, int y) {
-    if (x >= 0 && x < width && y >= 0 && y < height) {
-        grid[y][x] = '.';
-    }
-}
-
-void Grid::display() const {
-    for (const auto& row : grid) {
-        for (const auto& cell : row) {
-            cout << cell << ' ';
+    Grid::Grid(int w, int h) : width(w), height(h)
+    {
+        grid  = new char *[width];
+        for (int i = 0; i < width; ++i)
+        {
+            grid[i] = new char[width];
         }
-        cout << endl;
+        for (int i = 0; i < height; ++i)
+        {
+            for (int j = 0; j < width; ++j)
+            {
+                grid[i][j] = '.';
+            }
+        }
     }
-}
+
+            void Grid::placeBot(int x, int y, char Robotname)
+            {
+                if (x >= 0 && x < width && y >= 0 && y < height)
+                {
+                    grid[y][x] = Robotname;
+                }
+            }
+
+            void Grid::clearPosition(int x, int y)
+            {
+                if (x >= 0 && x < width && y >= 0 && y < height)
+                {
+                    grid[y][x] = '.';
+                }
+            }
+
+            void Grid::display() const
+            {
+                for (int i = 0; i < height; ++i)
+                {
+                    for (int j = 0; j < width; ++j)
+                    {
+                        cout << grid[i][j] << ' ';
+                    }
+                    cout << endl;
+                }
+            }

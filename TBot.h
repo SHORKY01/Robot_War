@@ -6,32 +6,34 @@
 
 using namespace std;
 
-class Bot {
+class Robot {
 protected:
     string name;
-    int health;
-    int power;
+    int numOfLives = 3;
     int x, y; // Position on the grid
 
 public:
-    Bot(string _name, int _health, int _power, int _x, int _y);
+    Robot(string _name, int _numOfLives, int _x, int _y);
 
-    virtual void attack() const = 0;
-    virtual void defend() const = 0;
+    void Look(char** grid, int width, int height);
+    void Fire(char **grid, int width, int height);
 
-    virtual ~Bot() {}
+    virtual ~Robot() {}
 
     int getX() const { return x; }
     int getY() const { return y; }
     void setPosition(int _x, int _y) { x = _x; y = _y; }
+
+    string getName() const { return name; }
+
 };
 
-class SimpleBot : public Bot {
+class SimpleBot : public Robot { //inheritance
 public:
-    SimpleBot(string _name, int _x, int _y);
+    SimpleBot(string _name, int _numOfLives, int _x, int _y);
+    
+    using Robot::Look;
 
-    void attack() const override;
-    void defend() const override;
 };
 
 #endif // BOT_H
