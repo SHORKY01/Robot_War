@@ -1,40 +1,60 @@
-#include "battlefield.h"
-#include "robot.h"
-#include <vector>
-#include <iostream>
+#include "Grid.h"
+#include "TBot.h"
+#include <iostream> 
 
 using namespace std;
 
 int main() {
-    // Create the battlefield matrix
-    vector<vector<char>> battlefield(HEIGHT, vector<char>(WIDTH));
+    Grid grid(30, 20);
+    Grid* gridPtr = &grid;
 
-    // Initialize the battlefield
-    initializeBattlefield(battlefield);
+    SimpleBot *simple = new SimpleBot("SimpleBot", 3, 0, 0, 0, gridPtr);
+    grid.placeBot(simple->getX(), simple->getY(), 'S');
 
-    // Create robots with different capabilities and place them on the battlefield
-    vector<Robot> robots = {
-        Robot(1, 1, 1, true, true, true),
-        Robot(2, 2, 2, true, false, true),
-        Robot(3, 3, 3, false, true, true)
-    };
+    SimpleBot *enemy = new SimpleBot("SimpleBotOfHeaven", 3, 0, 1, 3, gridPtr);
+    grid.placeBot(enemy->getX(), enemy->getY(), 'P');
 
-    // Place robots on the battlefield
-    battlefield[1][1] = 'R'; // Position for Robot 1
-    battlefield[2][2] = 'R'; // Position for Robot 2
-    battlefield[3][3] = 'R'; // Position for Robot 3
+    grid.display();  
+    // Call the Look function to print the surrounding area
+    
 
-    // Display the initial battlefield
-    displayBattlefield(battlefield);
+    int newX, newY;
+    cout << "Enter new x position for the bot (1-30): ";
+    cin >> newX;
 
-    // Simulate turns
-    for (int turn = 0; turn < 5; ++turn) { // Run for 5 turns for example
-        cout << "Turn " << turn + 1 << endl;
-        for (auto& robot : robots) {
-            robot.performActions(battlefield);
-            displayBattlefield(battlefield);
-        }
+    cout << "Enter new y position for the bot (1-20): ";
+    cin >> newY;++
+    newX -= 1;
+    newY -= 1;
+
+    grid.clearPosition(simple->getX(), simple->getY());
+
+    simple->setPosition(newX, newY);
+    grid.placeBot(simple->getX(), simple->getY(), 'S');
+
+    cout << "\nAfter moving the bot:\n";
+    grid.display();
+
+    cout << "\n1 - Look" << endl << "2 - Fire" << endl << "3 - Move" << "\n4 - Step" << endl << "Choice: " ;
+    char choice;
+    cin >> choice;
+    if (choice == '1')
+    {
+        simple->Look(grid.getGrid(), grid.getWidth(), grid.getHeight());
     }
+    else if (choice == '2')
+    {
+        simple->Fire(grid.getGrid(), grid.getWidth(), grid.getHeight());
+    }
+    else if (choice == '3')
+    {
+        simple->Move(&grid, grid.getWidth(), grid.getHeight());
+    }
+    else if (choice == '4')
+    {
+        simple->Step(grid.getGrid(), grid.getWidth(), grid.getHeight());
+    }
+    grid.display();
 
     return 0;
 }
