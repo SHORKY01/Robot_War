@@ -1,60 +1,174 @@
-#include "robot.h"
+#include "Grid.h"
+#include "TBot.h"
 #include <iostream>
-#include <vector>
-#include <cstdlib> // For rand() and srand()
-#include <ctime>   // For time()
 
 using namespace std;
 
-Robot::Robot(int id, int x, int y, bool canLook, bool canMove, bool canFire)
-    : id(id), x(x), y(y), canLook(canLook), canMove(canMove), canFire(canFire) {
-    srand(static_cast<unsigned int>(time(0))); // Seed for random number generation
+Robot::Robot(string _name, int _numOfLives, int _kills, int _x, int _y, Grid* _grid)
+    : name(_name), numOfLives(_numOfLives), kills(_kills), x(_x), y(_y), grid(_grid) {}
+
+MovingRobot::MovingRobot(string _name, int _numOfLives, int _kills, int _x, int _y, Grid* _grid)
+    : Robot(_name, 3, _kills, _x, _y, _grid) {}
+
+SeeingRobot::SeeingRobot(string _name, int _numOfLives, int _kills, int _x, int _y, Grid *_grid)
+    : Robot(_name, 3, _kills, _x, _y, _grid) {}
+
+ShootingRobot::ShootingRobot(string _name, int _numOfLives, int _kills, int _x, int _y, Grid *_grid)
+    : Robot(_name, 3, _kills, _x, _y, _grid) {}
+
+SteppingRobot::SteppingRobot(string _name, int _numOfLives, int _kills, int _x, int _y, Grid *_grid)
+    : Robot(_name, 3, _kills, _x, _y, _grid) {}
+
+void Robot::PointerToGrid(int *newX, int *newY)
+{
+    if (*newX >= 0 && *newX < grid->getWidth() && *newY >= 0 && *newY < grid->getHeight()) //pointers pointing to grid members
+    {
+        x = *newX;
+        y = *newY;
+        cout << "\n->" << name << " is pointing to (" << *newX << ", " << *newY << ")" << endl;
+    }
+    else
+    {
+        cout << "->" << "Invalid point. Position out of bounds." << endl;
+    }
 }
 
-void Robot::performActions(vector<vector<char>>& battlefield) {
-    if (canLook) look(battlefield);
-    if (canMove) move(battlefield);
-    if (canFire) fire(battlefield);
+void MovingRobot::Move(Grid* grid, int newX, int newY) {
+
+    int choice_dir;
+    newX = getX();
+    newY = getY();
+    cout << "Which direction does the robot move?\n \n1.UP\n2.DOWN\n3.RIGHT\n4.LEFT\n5.UP LEFT\n6.UP RIGHT\n7.DOWN LEFT\n8.DOWN RIGHT: ";
+    cin >> choice_dir;
+    switch (choice_dir) {
+        case 1: 
+            newY -= 1;
+            break;
+        case 2:
+            newY += 1;
+            break;
+        case 3:
+            newX += 1;
+            break;
+        case 4:
+            newX -= 1;
+            break;
+        case 5:
+            newX -= 1;
+            newY -= 1;
+            break;
+        case 6:
+            newX += 1;
+            newY -= 1;
+            break;
+        case 7:
+            newX -= 1;
+            newY += 1;
+            break;
+        case 8:
+            newX += 1;
+            newY += 1;
+            break;
+        default:
+            cout << "Invalid choice" << endl;  
+            return;
+    }
+
+    // update position
+    grid->clearPosition(x,y);
+    PointerToGrid(&newX, &newY);
+
+    if (newX >= 0 && x < grid->getWidth() && y >= 0 && y < grid->getHeight())
+    {
+    //place robot at new position
+    grid->placeBot(x, y, this->getName()[0]);
+    cout << "->" << name << " moved to (" << newX << ", " << newY << ")" << endl;
+    }
+    else {
+    cout << "Invalid move. Position out of bounds." << endl;
+    }
 }
 
-void Robot::look(const vector<vector<char>>& battlefield) {
-    cout << "Robot " << id << " is looking around." << endl;
-    int lookRange = 1;  // Define how far the robot can look
-    for (int i = y - lookRange; i <= y + lookRange; ++i) {
-        for (int j = x - lookRange; j <= x + lookRange; ++j) {
-            if (i >= 0 && i < battlefield.size() && j >= 0 && j < battlefield[0].size()) {
-                cout << " (" << j << ", " << i << "): " << battlefield[i][j];
-            }
+
+
+void SeeingRobot::Look(char** grid, int width, int height) {
+   cout << '\n' << name << " is looking around " << endl;
+   bool Enemy = false;
+   for (int W = -4; W <= 4; ++W)
+   {
+       for (int H = -4; H <= 4; ++H)
+       {
+           int lookX = getX() + W;
+           int lookY = getY() + H;
+
+           // Check bounds to avoid out-of-bounds access
+           if (lookX >= 0 && lookX < width && lookY >= 0 && lookY < height)
+           {
+               if (grid[lookY][lookX] != '.' && !(lookX == x && lookY == y)) // to make sure it doesnt detect itself as enemy
+               {
+                   Enemy = true;
+                   cout << "->" << name << " found enemy robot at " << "(" << lookX << "," << lookY << "): " << grid[lookY][lookX] << endl;
+                   break;
+               }
+               if (Enemy == true)
+                   break;
+           }
+       }
+   }
+   if (Enemy == false){
+       cout << "->" << name << " sees nothing in a 9 square area." << endl;
+   }
+}
+
+void ShootingRobot::Fire(char **grid, int width, int height)
+{
+    cout << name << " is firing!" << endl;
+    // This function can be used to remove any robot that is shot at.
+    // Derived classes can implement their own shooting patterns.
+    // This base function can be called by derived classes to handle the removal of the robot.
+
+    // Example pattern: Just removing the object at a fixed position (1 cell ahead)
+    int targetX = getX(); // Example target coordinates (should be overridden in derived classes)
+    int targetY = getY() - 1;
+
+    if (targetX >= 0 && targetX < width && targetY >= 0 && targetY < height)
+    {
+        if (grid[targetY][targetX] != '.')
+        {
+            cout << "-> " << name << " hit and killed something at (" << targetX << ", " << targetY << "): " << grid[targetY][targetX] << endl;
+            grid[targetY][targetX] = '.'; // Remove the object from the grid
+            kills = getKills() + 1;
         }
-        cout << endl;
+        else
+        {
+            cout << "-> " << name << " missed at (" << targetX << ", " << targetY << ")" << endl;
+        }
     }
 }
 
-void Robot::move(vector<vector<char>>& battlefield) {
-    // Define the 8 possible movements
-    vector<pair<int, int>> directions = {
-        {-1, -1}, {-1, 0}, {-1, 1}, // Up-left, Up, Up-right
-        {0, -1},           {0, 1},  // Left,        Right
-        {1, -1}, {1, 0}, {1, 1}     // Down-left, Down, Down-right
-    };
+void SteppingRobot::Step(char **grid, int width, int height)
+{
+    cout << name << " is stepping!" << endl;
+    // This function can be used to remove any robot that is stepped on.
+    // This base function can be called by derived classes to handle the removal of the robot.
 
-    // Select a random direction to move
-    int dirIndex = rand() % directions.size();
-    int newX = x + directions[dirIndex].second;
-    int newY = y + directions[dirIndex].first;
+    // Example pattern: Just removing the object at a fixed position (1 cell ahead)
+    int targetX = getX(); // Example target coordinates (should be overridden in derived classes)
+    int targetY = getY() - 1;
 
-    // Check if the new position is within bounds and not occupied
-    if (newX >= 0 && newX < battlefield[0].size() && newY >= 0 && newY < battlefield.size() && battlefield[newY][newX] == '.') {
-        battlefield[y][x] = '.';
-        x = newX;
-        y = newY;
-        battlefield[y][x] = 'R';
-        cout << "Robot " << id << " moved to (" << x << ", " << y << ")." << endl;
-    } else {
-        cout << "Robot " << id << " failed to move." << endl;
+    if (targetX >= 0 && targetX < width && targetY >= 0 && targetY < height)
+    {
+        if (grid[targetY][targetX] != '.')
+        {
+            cout << "-> " << name << " hit and killed something at (" << targetX << ", " << targetY << "): " << grid[targetY][targetX] << endl;
+            grid[targetY][targetX] = '.'; // Remove the object from the grid
+            kills = getKills() + 1;
+        }
+        else
+        {
+            cout << "-> " << name << " missed at (" << targetX << ", " << targetY << ")" << endl;
+        }
     }
 }
-
-void Robot::fire(vector<vector<char>>& battlefield) {
-    cout << "Robot " << id << " is firing." << endl;
-}
+SimpleBot::SimpleBot(string _name, int _numOfLives, int _kills, int _x, int _y, Grid* _grid)
+    : Robot(_name, 3, _kills, _x, _y, _grid), SeeingRobot(_name, 3, _kills, _x, _y, _grid), ShootingRobot(_name, 3, _kills, _x, _y, _grid), SteppingRobot(_name, 3, kills, _x, _y, _grid), MovingRobot(_name, 3, kills, _x, _y, _grid) {}
