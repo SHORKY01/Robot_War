@@ -1,3 +1,5 @@
+//DerivedRobot.h
+
 #ifndef DERIVEDROBOT_H
 #define DERIVEDROBOT_H
 
@@ -18,7 +20,7 @@ class Terminator : public virtual Robot, public SeeingRobot, public ShootingRobo
 { // inheritance
 public:
     Terminator(string _name, int _numOfLives, int _kills, int _x, int _y, Grid *_grid);
-
+    
     virtual ~Terminator() {}
 };
 
