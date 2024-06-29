@@ -1,39 +1,52 @@
-#include "battlefield.h"
+
+
+#include "Grid.h"
+#include "TBot.h"
 #include <iostream>
+#include <string>
 
 using namespace std;
 
-// Function to initialize the battlefield
-void initializeBattlefield(vector<vector<char>>& battlefield) {
-    for (int i = 0; i < HEIGHT; ++i) {
-        for (int j = 0; j < WIDTH; ++j) {
-            battlefield[i][j] = '.';  // Empty space
+    Grid::Grid(int w, int h) : width(w), height(h)
+    {
+        grid  = new char *[width];
+        for (int i = 0; i < width; ++i)
+        {
+            grid[i] = new char[width];
+        }
+        for (int i = 0; i < height; ++i)
+        {
+            for (int j = 0; j < width; ++j)
+            {
+                grid[i][j] = '.';
+            }
         }
     }
-}
 
-// Function to display the battlefield with grid borders
-void displayBattlefield(const vector<vector<char>>& battlefield) {
-    // Top border
-    cout << "+";
-    for (int j = 0; j < WIDTH; ++j) {
-        cout << "---+";
-    }
-    cout << endl;
+            void Grid::placeBot(int x, int y, char Robotname)//
+            {
+                if (x >= 0 && x < width && y >= 0 && y < height)
+                {
+                    grid[y][x] = Robotname;
+                }
+            }
 
-    for (int i = 0; i < HEIGHT; ++i) {
-        // Left border of the row
-        cout << "|";
-        for (int j = 0; j < WIDTH; ++j) {
-            cout << " " << battlefield[i][j] << " |";
-        }
-        cout << endl;
+            void Grid::clearPosition(int x, int y)
+            {
+                if (x >= 0 && x < width && y >= 0 && y < height)
+                {
+                    grid[y][x] = '.';
+                }
+            }
 
-        // Bottom border of the row
-        cout << "+";
-        for (int j = 0; j < WIDTH; ++j) {
-            cout << "---+";
-        }
-        cout << endl;
-    }
-}
+            void Grid::display() const
+            {
+                for (int i = 0; i < height; ++i)
+                {
+                    for (int j = 0; j < width; ++j)
+                    {
+                        cout << grid[i][j] << ' ';
+                    }
+                    cout << endl;
+                }
+            }
