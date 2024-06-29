@@ -1,14 +1,32 @@
-#ifndef BATTLEFIELD_H
-#define BATTLEFIELD_H
+#ifndef GRID_H
+#define GRID_H
 
-#include <vector>
-
+#include <iostream>
+#include <string>
 using namespace std;
 
-const int WIDTH = 10;  // You can change this to 80
-const int HEIGHT = 5;  // You can change this to 50
+class Grid {
+protected:
+    int width;
+    int height;
+    char** grid;
 
-void initializeBattlefield(vector<vector<char>>& battlefield);
-void displayBattlefield(const vector<vector<char>>& battlefield);
+public:
+    Grid(int w, int h);
+    ~Grid(){
+        for (int i = 0; i < width; ++i)
+        {
+            delete[] grid[i];
+        }
+        delete[] grid;
+    }
 
-#endif // BATTLEFIELD_H
+    void placeBot(int x, int y, char name);
+    void clearPosition(int x, int y);
+    void display() const;
+    char** getGrid() { return grid; };
+    int getWidth() const { return width; }
+    int getHeight() const { return height; }
+};
+
+#endif //GRID_H
