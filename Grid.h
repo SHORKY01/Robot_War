@@ -1,22 +1,14 @@
-#ifndef GRID_H
-#define GRID_H
+#ifndef BATTLEFIELD_H
+#define BATTLEFIELD_H
 
-#include <iostream>
 #include <vector>
+
 using namespace std;
 
-class Grid {
-private:
-    int width;
-    int height;
-    vector<vector<char>> grid;
+const int WIDTH = 10;  // You can change this to 80
+const int HEIGHT = 5;  // You can change this to 50
 
-public:
-    Grid(int w, int h);
+void initializeBattlefield(vector<vector<char>>& battlefield);
+void displayBattlefield(const vector<vector<char>>& battlefield);
 
-    void placeBot(int x, int y, char symbol);
-    void clearPosition(int x, int y);
-    void display() const;
-};
-
-#endif // GRID_H
+#endif // BATTLEFIELD_H
