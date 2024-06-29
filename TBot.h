@@ -1,37 +1,26 @@
-#ifndef BOT_H
-#define BOT_H
+#ifndef ROBOT_H
+#define ROBOT_H
 
-#include <iostream>
-#include <string>
+#include <vector>
 
 using namespace std;
 
-class Bot {
-protected:
-    string name;
-    int health;
-    int power;
-    int x, y; // Position on the grid
-
+class Robot {
 public:
-    Bot(string _name, int _health, int _power, int _x, int _y);
+    Robot(int id, int x, int y, bool canLook, bool canMove, bool canFire);
 
-    virtual void attack() const = 0;
-    virtual void defend() const = 0;
+    void performActions(vector<vector<char>>& battlefield);
 
-    virtual ~Bot() {}
+private:
+    int id;
+    int x, y;
+    bool canLook;
+    bool canMove;
+    bool canFire;
 
-    int getX() const { return x; }
-    int getY() const { return y; }
-    void setPosition(int _x, int _y) { x = _x; y = _y; }
+    void look(const vector<vector<char>>& battlefield);
+    void move(vector<vector<char>>& battlefield);
+    void fire(vector<vector<char>>& battlefield);
 };
 
-class SimpleBot : public Bot {
-public:
-    SimpleBot(string _name, int _x, int _y);
-
-    void attack() const override;
-    void defend() const override;
-};
-
-#endif // BOT_H
+#endif // ROBOT_H
