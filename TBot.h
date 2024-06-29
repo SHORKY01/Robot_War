@@ -1,3 +1,5 @@
+//TBot.h
+
 #ifndef BOT_H
 #define BOT_H
 
@@ -27,6 +29,8 @@ public:
     int getKills() const { return kills; }
     void setPosition(int _x, int _y) { x = _x; y = _y; }
     void PointerToGrid(int* newX, int* newY);
+
+    virtual void Move(Grid* grid, int newX, int newY) = 0;
 
     string getName() const { return name; }
 
