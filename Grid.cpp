@@ -1,67 +1,38 @@
-/*#include "Grid.h"
-#include <iostream>
-#include <vector>
-
-using namespace std;
-
-class Grid {
-private:
-    int width;
-    int height;
-    vector<vector<char>> grid;
-
-public:
-    Grid(int w, int h) : width(w), height(h) {
-        grid.resize(height, vector<char>(width, '.'));
-    }
-
-    void placeBot(int x, int y, char symbol) {
-        if (x >= 0 && x < width && y >= 0 && y < height) {
-            grid[y][x] = symbol;
-        }
-    }
-
-    void clearPosition(int x, int y) {
-        if (x >= 0 && x < width && y >= 0 && y < height) {
-            grid[y][x] = '.';
-        }
-    }
-
-    void display() const {
-        for (const auto& row : grid) {
-            for (const auto& cell : row) {
-                cout << cell << ' ';
-            }
-            cout << endl;
-        }
-    }
-};*/
-
-#include "Grid.h"
+#include "battlefield.h"
 #include <iostream>
 
 using namespace std;
 
-Grid::Grid(int w, int h) : width(w), height(h) {
-    grid.resize(height, vector<char>(width, '.'));
-}
-
-void Grid::placeBot(int x, int y, char symbol) {
-    if (x >= 0 && x < width && y >= 0 && y < height) {
-        grid[y][x] = symbol;
+// Function to initialize the battlefield
+void initializeBattlefield(vector<vector<char>>& battlefield) {
+    for (int i = 0; i < HEIGHT; ++i) {
+        for (int j = 0; j < WIDTH; ++j) {
+            battlefield[i][j] = '.';  // Empty space
+        }
     }
 }
 
-void Grid::clearPosition(int x, int y) {
-    if (x >= 0 && x < width && y >= 0 && y < height) {
-        grid[y][x] = '.';
+// Function to display the battlefield with grid borders
+void displayBattlefield(const vector<vector<char>>& battlefield) {
+    // Top border
+    cout << "+";
+    for (int j = 0; j < WIDTH; ++j) {
+        cout << "---+";
     }
-}
+    cout << endl;
 
-void Grid::display() const {
-    for (const auto& row : grid) {
-        for (const auto& cell : row) {
-            cout << cell << ' ';
+    for (int i = 0; i < HEIGHT; ++i) {
+        // Left border of the row
+        cout << "|";
+        for (int j = 0; j < WIDTH; ++j) {
+            cout << " " << battlefield[i][j] << " |";
+        }
+        cout << endl;
+
+        // Bottom border of the row
+        cout << "+";
+        for (int j = 0; j < WIDTH; ++j) {
+            cout << "---+";
         }
         cout << endl;
     }
