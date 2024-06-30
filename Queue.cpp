@@ -2,6 +2,7 @@
 
 #include "Queue.h"
 #include "TBot.h"
+#include "DerivedRobot.h"
 
 // Implementation of Queue<T> methods
 
@@ -55,3 +56,10 @@ int Queue<T>::size() const {
 // Explicit instantiation of the template classes
 template class Queue<int>; // Replace with your desired types as needed
 template class Queue<SimpleBot*>; // Explicit instantiation for SimpleBot*
+template class Queue<RoboCop*>; // Explicit instantiation for Robocop*
+template class Queue<Terminator*>; // Explicit instantiation for Terminator*
+template class Queue<TerminatorRoboCop*>; // Explicit instantiation for TerminatorRobocop*
+template class Queue<BlueThunder*>; // Explicit instantiation for BlueThunder*
+template class Queue<Madbot*>; // Explicit instantiation for MadBot*
+template class Queue<RoboTank*>; // Explicit instantiation for RoboTank*
+template class Queue<UltimateRobot*>; // Explicit instantiation for UltimateRobot*
