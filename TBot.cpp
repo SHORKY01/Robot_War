@@ -1,5 +1,3 @@
-//TBot.cpp
-
 #include "Grid.h"
 #include "TBot.h"
 #include "Queue.h"
@@ -26,9 +24,16 @@ void Robot::PointerToGrid(int *newX, int *newY)
 {
     if (*newX >= 0 && *newX < grid->getWidth() && *newY >= 0 && *newY < grid->getHeight()) //pointers pointing to grid members
     {
+        if (grid->getGrid()[*newY][*newX] == '.')
+        {
         x = *newX;
         y = *newY;
-        cout << "\n->" << name << " is pointing to (" << *newX << ", " << *newY << ")" << endl;
+        cout << "\n->" << name << " moved to (" << *newX << ", " << *newY << ")" << endl;
+        }
+        else if (grid->getGrid()[*newY][*newX] != '.')
+        {
+            cout << "\n->" << "Unable to move, there exists a robot in this position: " << grid->getGrid()[*newY][*newX] << endl;
+        }
     }
     else
     {
@@ -73,7 +78,7 @@ void MovingRobot::Move(Grid* grid, int newX, int newY) {
             newY += 1;
             break;
         default:
-            cout << "Invalid choice" << endl;  
+            cout << "Invalid choice for direction" << endl;  
             return;
     }
 
@@ -81,16 +86,11 @@ void MovingRobot::Move(Grid* grid, int newX, int newY) {
     grid->clearPosition(x,y);
     PointerToGrid(&newX, &newY);
 
-    if (newX >= 0 && x < grid->getWidth() && y >= 0 && y < grid->getHeight())
-    {
-    //place robot at new position
+    //place robot at new position, same position if x and y didnt change
     grid->placeBot(x, y, this->getName()[0]);
-    cout << "->" << name << " moved to (" << newX << ", " << newY << ")" << endl;
-    }
-    else {
-    cout << "Invalid move. Position out of bounds." << endl;
-    }
+    this->grid->display();
 }
+
 
 
 
@@ -121,6 +121,7 @@ void SeeingRobot::Look(char** grid, int width, int height) {
    if (Enemy == false){
        cout << "->" << name << " sees nothing in a 9 square area." << endl;
    }
+   this->grid->display();
 }
 
 void ShootingRobot::Fire(char **grid, int width, int height)
@@ -131,22 +132,25 @@ void ShootingRobot::Fire(char **grid, int width, int height)
     // This base function can be called by derived classes to handle the removal of the robot.
 
     // Example pattern: Just removing the object at a fixed position (1 cell ahead)
-    int targetX = getX(); // Example target coordinates (should be overridden in derived classes)
+    int targetX = getX(); // Example tpattern(should be overridden in derived classes)
     int targetY = getY() - 1;
 
     if (targetX >= 0 && targetX < width && targetY >= 0 && targetY < height)
     {
-        if (grid[targetY][targetX] != '.')
+        char targetChar = grid[targetY][targetX];
+        if (targetChar != '.')
         {
-            cout << "-> " << name << " hit and killed something at (" << targetX << ", " << targetY << "): " << grid[targetY][targetX] << endl;
+            cout << "-> " << name << " hit and killed something at (" << targetX << ", " << targetY << "): " << targetChar << endl;
             grid[targetY][targetX] = '.'; // Remove the object from the grid
             kills = getKills() + 1;
         }
         else
         {
             cout << "-> " << name << " missed at (" << targetX << ", " << targetY << ")" << endl;
+            grid[targetY][targetX] = '.';
         }
     }
+    this->grid->display();
 }
 
 void SteppingRobot::Step(char **grid, int width, int height)
@@ -172,6 +176,7 @@ void SteppingRobot::Step(char **grid, int width, int height)
             cout << "-> " << name << " missed at (" << targetX << ", " << targetY << ")" << endl;
         }
     }
+    this->grid->display();
 }
 SimpleBot::SimpleBot(string _name, int _numOfLives, int _kills, int _x, int _y, Grid* _grid)
     : Robot(_name, 3, _kills, _x, _y, _grid), SeeingRobot(_name, 3, _kills, _x, _y, _grid), ShootingRobot(_name, 3, _kills, _x, _y, _grid), SteppingRobot(_name, 3, kills, _x, _y, _grid), MovingRobot(_name, 3, kills, _x, _y, _grid) {}
