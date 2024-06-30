@@ -1,5 +1,3 @@
-//TBot.h
-
 #ifndef BOT_H
 #define BOT_H
 
@@ -8,7 +6,6 @@
 #include <string>
 
 using namespace std;
-
 
 class Robot {
 protected:
@@ -30,16 +27,15 @@ public:
     void setPosition(int _x, int _y) { x = _x; y = _y; }
     void PointerToGrid(int* newX, int* newY);
 
-    virtual void Move(Grid* grid, int newX, int newY) = 0;
+    string getName() const { return name; }  
 
-    string getName() const { return name; }
-
+    // Virtual functions to be overridden in derived classes
 };
 class MovingRobot : public virtual Robot
 {
 public:
     MovingRobot(string _name, int _numOfLives, int _kills, int _x, int _y, Grid* _grid);
-    void Move(Grid* grid, int newX, int newY);
+    virtual void Move(Grid *grid, int newX, int newY);
 
     virtual ~MovingRobot() {} // destructor
 };
@@ -57,7 +53,7 @@ class ShootingRobot : public virtual Robot
 {
 public:
     ShootingRobot(string _name, int _numOfLives, int _kills, int _x, int _y, Grid* _grid);
-    void Fire(char **grid, int width, int height);
+    virtual void Fire(char **grid, int width, int height);
 
     virtual ~ShootingRobot() {} // destructor
 };
