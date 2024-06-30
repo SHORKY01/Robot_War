@@ -9,8 +9,8 @@ class RoboCop : public virtual Robot, public SeeingRobot, public ShootingRobot, 
 { // inheritance
 public:
     RoboCop(string _name, int _numOfLives, int _kills, int _x, int _y, Grid* _grid);
-    void Look(char** grid, int width, int height);
-    void Move(Grid* grid, int newX, int newY);
+    virtual void Look(char** grid, int width, int height);
+    virtual void Move(Grid* grid, int newX, int newY);
     virtual void Fire(char **grid, int width, int height);
     /*void Act() {
         Look(grid->getGrid(), grid->getWidth(), grid->getHeight());            // LOOK
@@ -25,11 +25,14 @@ class Terminator : public virtual Robot, public SeeingRobot, public ShootingRobo
 { // inheritance
 public:
     Terminator(string _name, int _numOfLives, int _kills, int _x, int _y, Grid *_grid);
+    virtual void Look(char** grid, int width, int height);
+    virtual void Move(Grid* grid, int newX, int newY);
+    void Step(char **grid, int width, int height);
 
     virtual ~Terminator() {}
 };
 
-class TerminatorRoboCop : public virtual Robot, public SeeingRobot, public ShootingRobot, public MovingRobot
+class TerminatorRoboCop : public SeeingRobot, public ShootingRobot, public MovingRobot
 { // inheritance
 public:
     TerminatorRoboCop(string _name, int _numOfLives, int _kills, int _x, int _y, Grid *_grid);
