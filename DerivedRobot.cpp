@@ -1,7 +1,6 @@
-//DerivedRobot.cpp
-
 #include <iostream>
 #include <string>
+#include <cstdlib>
 #include "Grid.h"
 #include "TBot.h"
 #include "DerivedRobot.h"
@@ -9,67 +8,60 @@
 RoboCop::RoboCop(string _name, int _numOfLives, int _kills, int _x, int _y, Grid *_grid)
     : Robot(_name, 3, _kills, _x, _y, _grid), SeeingRobot(_name, 3, _kills, _x, _y, _grid), ShootingRobot(_name, 3, _kills, _x, _y, _grid), MovingRobot(_name, 3, _kills, _x, _y, _grid) {}
 
-void RoboCop::Move(Grid *grid, int newX, int newY)
+void RoboCop::Look(char** grid, int width, int height){
+    SeeingRobot::Look(grid, width, height);
+}
+
+void RoboCop::Move(Grid* grid, int newX, int newY){
+    MovingRobot::Move(grid, newX, newY);
+}
+
+void RoboCop::Fire(char **grid, int width, int height)
 {
+    int missedShots[3][2]; // To store up to 3 missed shot coordinates
+    int missedCount = 0;
 
-    int choice_dir;
-    newX = getX();
-    newY = getY();
-    cout << "Which direction does the robot move?\n \n1.UP\n2.DOWN\n3.RIGHT\n4.LEFT\n5.UP LEFT\n6.UP RIGHT\n7.DOWN LEFT\n8.DOWN RIGHT: ";
-    cin >> choice_dir;
-    switch (choice_dir)
-    {
-    case 1:
-        newY -= 1;
-        break;
-    case 2:
-        newY += 1;
-        break;
-    case 3:
-        newX += 1;
-        break;
-    case 4:
-        newX -= 1;
-        break;
-    case 5:
-        newX -= 1;
-        newY -= 1;
-        break;
-    case 6:
-        newX += 1;
-        newY -= 1;
-        break;
-    case 7:
-        newX -= 1;
-        newY += 1;
-        break;
-    case 8:
-        newX += 1;
-        newY += 1;
-        break;
-    default:
-        cout << "Invalid choice" << endl;
-        return;
+    bool missed = false;
+    for (int i = 0; i < 3; i++){ //fire 3 times
+         // Generate random offsets between -5 and 5
+        int RandX = rand() % 11 - 5;
+        int RandY = rand() % 11 - 5;
+        // coordinates that are shot at
+        int newX = getX() + RandX;
+        int newY = getY() + RandY;
+
+        if (newX >= 0 && newX < width && newY >= 0 && newY < height){
+            //shoot at the new coordinates
+            grid[newY][newX] = '*'; //coordinates hit symbol
+            if (grid[newY][newX] != '.' && grid[newY][newX] != '*'){
+                cout << "\n->" << this->name << " fires at (" << newX << ", " << newY << "): " << grid[newY][newX] << endl;
+                kills = getKills() + 1;
+            }
+            else {
+                grid[newY][newX] = '*'; // Mark missed shots directly on the grid
+                missedShots[missedCount][0] = newX;
+                missedShots[missedCount][1] = newY;
+                missedCount++;
+            }
+        }
     }
-
-    // update position
-    grid->clearPosition(x, y);
-    PointerToGrid(&newX, &newY);
-
-    if (newX >= 0 && x < grid->getWidth() && y >= 0 && y < grid->getHeight())
-    {
-        // place robot at new position
-        grid->placeBot(x, y, this->getName()[0]);
-        cout << "->" << name << " moved to (" << newX << ", " << newY << ")" << endl;
-    }
-    else
-    {
-        cout << "Invalid move. Position out of bounds." << endl;
+    if (missed) {
+        cout << endl;
+        this->grid->display(); // call the display fx on the grid member variable
+        // Restore the grid by changing '*' back to '.' because '*' is just a hitmarket that shows where spots are hit on the grid
+        for (int i = 0; i < missedCount; i++)
+        {
+            int missedX = missedShots[i][0]; // Get the x-coordinate of the missed shot
+            int missedY = missedShots[i][1]; // Get the y-coordinate of the missed shot
+            grid[missedY][missedX] = '.';
+        }
     }
 }
 
 Terminator::Terminator(string _name, int _numOfLives, int _kills, int _x, int _y, Grid *_grid)
-    : Robot(_name, 3, _kills, _x, _y, _grid), SeeingRobot(_name, 3, _kills, _x, _y, _grid), ShootingRobot(_name, 3, _kills, _x, _y, _grid), MovingRobot(_name, 3, _kills, _x, _y, _grid) {}
+    : Robot(_name, 3, _kills, _x, _y, _grid), SeeingRobot(_name, 3, _kills, _x, _y, _grid), ShootingRobot(_name, 3, _kills, _x, _y, _grid), MovingRobot(_name, 3, _kills, _x, _y, _grid)
+{
+}
 
 TerminatorRoboCop::TerminatorRoboCop(string _name, int _numOfLives, int _kills, int _x, int _y, Grid *_grid)
     : Robot(_name, 3, _kills, _x, _y, _grid), SeeingRobot(_name, 3, _kills, _x, _y, _grid), ShootingRobot(_name, 3, _kills, _x, _y, _grid), MovingRobot(_name, 3, _kills, _x, _y, _grid) {}
