@@ -35,15 +35,15 @@ class MovingRobot : public virtual Robot
 {
 public:
     MovingRobot(string _name, int _numOfLives, int _kills, int _x, int _y, Grid* _grid);
-    virtual void Move(Grid *grid, int newX, int newY);
+        virtual void Move(Grid *grid, int newX, int newY);
 
-    virtual ~MovingRobot() {} // destructor
+        virtual ~MovingRobot() {} // destructor
 };
 
 class SeeingRobot : public virtual Robot {
     public:
         SeeingRobot(string _name, int _numOfLives, int _kills, int _x, int _y, Grid* _grid);
-        void Look(char **grid, int width, int height);
+        virtual void Look(char **grid, int width, int height);
 
         virtual ~SeeingRobot() {} // destructor
 
@@ -53,18 +53,20 @@ class ShootingRobot : public virtual Robot
 {
 public:
     ShootingRobot(string _name, int _numOfLives, int _kills, int _x, int _y, Grid* _grid);
-    virtual void Fire(char **grid, int width, int height);
+        virtual void Fire(char **grid, int width, int height);
 
-    virtual ~ShootingRobot() {} // destructor
+        virtual ~ShootingRobot() {} // destructor
 };
 
 class SteppingRobot : public virtual Robot
 {
     public:
-    SteppingRobot(string _name, int _numOfLives, int _kills, int _x, int _y, Grid* _grid);
-    void Step(char** grid, int width, int height);
+        SteppingRobot(string _name, int _numOfLives, int _kills, int _x, int _y, Grid* _grid);
+        virtual void Step(char **grid, int width, int height);
 
-    virtual ~SteppingRobot() {}
+        virtual ~SteppingRobot()
+    {
+    }
 };
 
 
