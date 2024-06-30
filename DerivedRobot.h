@@ -11,7 +11,7 @@ public:
     RoboCop(string _name, int _numOfLives, int _kills, int _x, int _y, Grid* _grid);
     void Look(char** grid, int width, int height);
     void Move(Grid* grid, int newX, int newY);
-    void Fire(char** grid, int width, int height) override;
+    virtual void Fire(char **grid, int width, int height);
     /*void Act() {
         Look(grid->getGrid(), grid->getWidth(), grid->getHeight());            // LOOK
         Move(grid, this->getX(), this->getY());                                     // MOVE
