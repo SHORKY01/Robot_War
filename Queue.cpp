@@ -55,6 +55,7 @@ int Queue<T>::size() const {
 
 // Explicit instantiation of the template classes
 template class Queue<int>; // Replace with your desired types as needed
+template class Queue<Robot*>;
 template class Queue<SimpleBot*>; // Explicit instantiation for SimpleBot*
 template class Queue<RoboCop*>; // Explicit instantiation for Robocop*
 template class Queue<Terminator*>; // Explicit instantiation for Terminator*
