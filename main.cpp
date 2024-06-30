@@ -19,6 +19,7 @@ int main()
     // Initialize Robots
     SimpleBot *simple = new SimpleBot("SimpleBot", 3, 0, 0, 0, gridPtr);
     RoboCop *robocop = new RoboCop("Robocop", 3, 0, 1, 1, gridPtr);
+    Terminator *terminator = new Terminator("Terminarizz", 3, 0, 1, 2, gridPtr); //name, lives, kills, x, y, ptr
     // Add other robots here
     // Terminator* terminator = new Terminator(...);
     // TerminatorRobocop* terminatorRobocop = new TerminatorRobocop(...);
@@ -30,6 +31,7 @@ int main()
     // Enqueue Robots
     turnQueue.enqueue(robocop);
     turnQueue.enqueue(simple);
+    turnQueue.enqueue(terminator);
     // Enqueue other robots similarly
     // turnQueue.enqueue(terminator);
     // turnQueue.enqueue(terminatorRobocop);
@@ -39,8 +41,9 @@ int main()
     // turnQueue.enqueue(ultimateRobot);
 
     // Display initial grid state
-    grid.placeBot(simple->getX(), simple->getY(), 'S');
-    grid.placeBot(robocop->getX(), robocop->getY(), 'R');
+    grid.placeBot(simple->getX(), simple->getY(), simple->getName()[0]);
+    grid.placeBot(robocop->getX(), robocop->getY(), robocop->getName()[0]);
+    grid.placeBot(terminator->getX(), terminator->getY(), terminator->getName()[0]);
     // Place other Robots similarly...
 
     grid.display();
@@ -123,7 +126,6 @@ int main()
         }
 
         // Display updated grid state
-        grid.display();
 
         // Increment turn number for the next round
         turnNumber++;
